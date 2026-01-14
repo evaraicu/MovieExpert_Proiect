@@ -1,0 +1,124 @@
+﻿@model IEnumerable<MovieExpert_Proiect.Models.Movie>
+
+@{
+    ViewData["Title"] = "Filme";
+}
+
+<h1>Filme</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Adaugă Film Nou</a>
+</p>
+
+<form asp-controller="Movies" asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <span class="input-group-text">Caută după Titlu:</span>
+        <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" />
+        <button type="submit" class="btn btn-outline-primary">Caută</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Resetează</a>
+    </div>
+</form>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    @Html.DisplayNameFor(model => model.Title)
+                    @if (ViewData["CurrentSort"] == null || (string)ViewData["CurrentSort"] == "") { <span>▲</span> } 
+                    else if ((string)ViewData["CurrentSort"] == "title_desc") { <span>▼</span> }
+                </a>
+            </th>
+            
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    @Html.DisplayNameFor(model => model.ReleaseYear) 
+                    @if ((string)ViewData["DateSortParm"] == "date_desc") { <span>▼</span> } else { <span>▲</span> }
+                </a>
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.RuntimeMinutes)
+            </th>
+            
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["RatingSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    @Html.DisplayNameFor(model => model.IMDBRating)
+                    @if ((string)ViewData["RatingSortParm"] == "rating_desc") { <span>▼</span> } else { <span>▲</span> }
+                </a>
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.PosterUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Overview)
+            </th>
+            <th>
+                Gen
+            </th>
+            <th>
+                Regizor
+            </th>
+            
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ActorSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Actor Principal
+                    @if ((string)ViewData["ActorSortParm"] == "actor_desc") { <span>▼</span> } else { <span>▲</span> }
+                </a>
+            </th>
+            
+            <th>Acțiuni</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td style="font-weight:bold;">
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RuntimeMinutes) min
+            </td>
+            <td>
+                <span class="badge bg-warning text-dark">@Html.DisplayFor(modelItem => item.IMDBRating)</span>
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.PosterUrl))
+                {
+                    <img src="@item.PosterUrl" style="height: 80px; border-radius: 5px;" alt="Poster" />
+                }
+            </td>
+            <td>
+                @if(item.Overview != null && item.Overview.Length > 50)
+                {
+                    @item.Overview.Substring(0, 50) <span>...</span>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Overview)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Director.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Actor.Name)
+            </td>
+            <td>
+                <div class="btn-group-vertical btn-group-sm">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

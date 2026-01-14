@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../MovieRecommender_WebApi1/MovieRecommender_WebApi1.csproj" />
+  <Project Path="MovieExpert_Proiect.csproj" />
+</Solution>

@@ -1,0 +1,44 @@
+﻿@model MovieExpert_Proiect.Models.Movie
+
+@{
+    ViewData["Title"] = "Recomandare AI";
+}
+
+<div class="container text-center mt-5">
+    <h2 class="mb-4 text-primary">✨ Recomandarea Inteligenței Artificiale</h2>
+
+    @if (Model != null)
+    {
+        <div class="card shadow-lg mx-auto" style="max-width: 700px; border-radius: 15px; overflow: hidden;">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    @* CORECTAT: Am schimbat PosterLink in PosterUrl conform Movie.cs *@
+                    <img src="@Model.PosterUrl" class="img-fluid" alt="Poster" style="height: 100%; object-fit: cover;">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body text-start p-4">
+                        @* CORECTAT: Am schimbat SeriesTitle in Title conform Movie.cs *@
+                        <h3 class="card-title fw-bold">@Model.Title</h3>
+                        <hr />
+                        <p class="card-text"><strong>🎬 Regizor:</strong> @(Model.Director != null ? Model.Director.Name : "N/A")</p>
+                        <p class="card-text"><strong>🎭 Gen:</strong> @(Model.Genre != null ? Model.Genre.Name : "N/A")</p>
+                        <p class="card-text"><strong>📅 An lansare:</strong> @Model.ReleaseYear</p>
+                        <p class="card-text"><strong>⏱️ Durată:</strong> @Model.RuntimeMinutes min</p>
+
+                        <div class="alert alert-info mt-3 py-2 border-0 shadow-sm" style="background-color: #e3f2fd;">
+                            <i class="bi bi-robot"></i> Acest film a fost calculat de AI ca având cel mai mare potențial de succes.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">Nu am găsit nicio recomandare.</div>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-outline-primary px-4">🔄 Încearcă alt gen</a>
+    </div>
+</div>

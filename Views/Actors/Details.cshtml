@@ -1,0 +1,50 @@
+﻿@model MovieExpert_Proiect.Models.Actor
+
+@{
+    ViewData["Title"] = "Detalii Actor";
+}
+
+<h1>Detalii Actor</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+    </dl>
+</div>
+
+<hr />
+<h4>Filme în care a jucat (Sarcina Laborator 3)</h4>
+
+@if (Model.Movies != null && Model.Movies.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titlu Film</th>
+                <th>An</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model.Movies)
+            {
+                <tr>
+                    <td>@movie.Title</td>
+                    <td>@movie.ReleaseYear</td>
+                    <td>@movie.IMDBRating</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Nu există filme înregistrate pentru acest actor.</p>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

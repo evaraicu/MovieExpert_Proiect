@@ -1,0 +1,46 @@
+﻿@model IEnumerable<MovieExpert_Proiect.Models.Genre>
+
+@{
+    ViewData["Title"] = "AI Movie Recommender";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="display-4 text-primary">✨ Recomandare prin Inteligență Artificială</h1>
+    <p class="lead">Alege genul preferat, iar AI-ul nostru va analiza baza de date pentru a găsi filmul perfect!</p>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-warning">
+            @ViewBag.Message
+        </div>
+    }
+
+    <div class="card shadow mx-auto p-4 mt-4" style="max-width: 500px; border-radius: 15px;">
+        <form asp-action="Recommend" method="post">
+            <div class="form-group mb-4 text-start">
+                <label class="form-label fw-bold">Ce gen de film cauți astăzi?</label>
+                <select name="genre" class="form-select form-select-lg">
+                    @if (Model != null)
+                    {
+                        @foreach (var genre in Model)
+                        {
+                            <option value="@genre.Name">@genre.Name</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="">Nu s-au găsit genuri în DB</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
+                <i class="bi bi-cpu"></i> Cere Recomandarea AI
+            </button>
+        </form>
+    </div>
+
+    <div class="mt-5 text-muted">
+        <small>Modelul AI folosește date despre regizori, durată și anul lansării pentru a prezice succesul unui film.</small>
+    </div>
+</div>
