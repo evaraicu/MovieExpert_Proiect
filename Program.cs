@@ -13,7 +13,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddHttpClient<MoviePredictionService>();
 
-// CORECTAT AICI: Am pus (o => în loc de { o.
 builder.Services.AddGrpcClient<MovieRecommender_GrpcService.MovieRecommender.MovieRecommenderClient>(o =>
 {
     o.Address = new Uri("https://localhost:7203");

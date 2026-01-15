@@ -2,10 +2,11 @@
 {
     public class MovieInput
     {
-        public string released_Year { get; set; }
-        public string runtime { get; set; }
-        public string genre { get; set; }
-        public string director { get; set; }
-        public string star1 { get; set; }
+        public string Series_Title { get; set; }
+        public string Released_Year { get; set; }
+        public string Runtime { get; set; }
+        public string Genre { get; set; }
+        public string Director { get; set; }
+        public string Star1 { get; set; }
     }
 }
