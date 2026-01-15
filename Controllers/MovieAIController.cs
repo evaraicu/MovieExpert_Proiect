@@ -2,9 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieExpert_Proiect.Data;
 using MovieExpert_Proiect.Models;
-using MovieRecommender_GrpcService;
-using MovieRecommender_GrpcService.Models;
-
 
 namespace MovieExpert_Proiect.Controllers
 {
@@ -29,6 +26,7 @@ namespace MovieExpert_Proiect.Controllers
             var movies = await _context.Movies
                 .Include(m => m.Genre)
                 .Include(m => m.Director)
+                .Include(m => m.Actor)
                 .Where(m => m.Genre.Name.Contains(genre))
                 .ToListAsync();
 
@@ -39,25 +37,21 @@ namespace MovieExpert_Proiect.Controllers
                 return View("Index", genres);
             }
 
-            MovieExpert_Proiect.Models.Movie? bestMovie = null;
+            MovieExpert_Proiect.Models.Movie bestMovie = null;
             float highestScore = -10000f;
 
             foreach (var movie in movies)
             {
-                // REZOLVARE: Nu folosim global:: deoarece creează confuzie cu gRPC.
-                // Folosim direct numele clasei generat în proiectul tău principal.
-                // Dacă Model Builder este în acest proiect, compilatorul îl va găsi.
-                var sampleData = new MovieRecommender_GrpcService.MovieRecommender.ModelInput()
+                var sampleData = new global::MovieRecommender.ModelInput()
                 {
-                    Genre = movie.Genre?.Name,
-                    Director = movie.Director?.Name,
                     Released_Year = movie.ReleaseYear.ToString(),
                     Runtime = movie.RuntimeMinutes.ToString() + " min",
-                    Star1 = "Default"
+                    Genre = movie.Genre?.Name,
+                    Director = movie.Director?.Name,
+                    Star1 = movie.Actor?.Name ?? "Unknown"
                 };
 
-                // Apelăm Predict direct
-                var prediction = MovieRecommender_GrpcService.Model.Predict(sampleData);
+                var prediction = global::MovieRecommender.Predict(sampleData);
 
                 if (prediction.Score > highestScore)
                 {

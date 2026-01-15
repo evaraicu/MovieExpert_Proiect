@@ -24,13 +24,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="imdb_top_1000.csv">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
+	  <ProjectReference Include="..\MovieRecommender_WebApi1\MovieRecommender_WebApi1.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\MovieRecommender_GrpcService\MovieRecommender_GrpcService.csproj" />
+		<None Update="imdb_top_1000.csv">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="MovieRecommender.mlnet">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
