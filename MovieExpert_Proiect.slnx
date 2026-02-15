@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="../MovieRecommender_GrpcService/MovieRecommender_GrpcService.csproj" Id="94c6c70e-e082-4b33-9039-b6c31bbbc6d8" />
   <Project Path="../MovieRecommender_WebApi1/MovieRecommender_WebApi1.csproj" />
+  <Project Path="../MovieTrivia_GrpcService/MovieTrivia_GrpcService.csproj" Id="c0ebe8b3-4ec4-4168-8d78-5bf4c41df296" />
   <Project Path="MovieExpert_Proiect.csproj" />
 </Solution>

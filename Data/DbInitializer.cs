@@ -11,7 +11,7 @@ namespace MovieExpert_Proiect.Data
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
-                // 1. Asigură crearea bazei de date
+                
                 context.Database.EnsureCreated();
 
                 if (context.Movies.Any())
@@ -20,7 +20,7 @@ namespace MovieExpert_Proiect.Data
                     return;
                 }
 
-                // 2. Citirea din CSV
+                
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "imdb_top_1000.csv");
                 if (!File.Exists(filePath)) return;
 
@@ -47,19 +47,19 @@ namespace MovieExpert_Proiect.Data
                         int.TryParse(runtimeStr, out int runtime);
                         decimal.TryParse(ratingStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal rating);
 
-                        // Gestionare Gen
+                       
                         var genre = context.Genres.FirstOrDefault(g => g.Name == genreName);
                         if (genre == null) { genre = new Genre { Name = genreName }; context.Genres.Add(genre); context.SaveChanges(); }
 
-                        // Gestionare Regizor
+                        
                         var director = context.Directors.FirstOrDefault(d => d.Name == directorName);
                         if (director == null) { director = new Director { Name = directorName }; context.Directors.Add(director); context.SaveChanges(); }
 
-                        // Gestionare Actor
+                       
                         var actor = context.Actors.FirstOrDefault(a => a.Name == actorName);
                         if (actor == null) { actor = new Actor { Name = actorName }; context.Actors.Add(actor); context.SaveChanges(); }
 
-                        // Creare Film
+                       
                         var movie = new Movie
                         {
                             Title = title,
@@ -109,7 +109,7 @@ namespace MovieExpert_Proiect.Data
 
             foreach (var film in primeleFilme)
             {
-                // Generăm între 1 și 3 recenzii pentru fiecare film
+             
                 int nrRecenzii = random.Next(1, 4);
 
                 for (int i = 0; i < nrRecenzii; i++)

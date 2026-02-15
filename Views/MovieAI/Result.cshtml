@@ -1,44 +1,240 @@
 ﻿@model MovieExpert_Proiect.Models.Movie
 
 @{
-    ViewData["Title"] = "Recomandare AI";
+    ViewData["Title"] = "Rezultat Analiză Robot";
 }
 
-<div class="container text-center mt-5">
-    <h2 class="mb-4 text-primary">✨ Recomandarea Inteligenței Artificiale</h2>
+<style>
+  
+    :root {
+        --color-primary: #146c86; 
+        --color-dark: #2b4955; 
+        --color-accent: #ecac98; 
+    }
 
-    @if (Model != null)
-    {
-        <div class="card shadow-lg mx-auto" style="max-width: 700px; border-radius: 15px; overflow: hidden;">
-            <div class="row g-0">
-                <div class="col-md-5">
-                    @* CORECTAT: Am schimbat PosterLink in PosterUrl conform Movie.cs *@
-                    <img src="@Model.PosterUrl" class="img-fluid" alt="Poster" style="height: 100%; object-fit: cover;">
-                </div>
-                <div class="col-md-7">
-                    <div class="card-body text-start p-4">
-                        @* CORECTAT: Am schimbat SeriesTitle in Title conform Movie.cs *@
-                        <h3 class="card-title fw-bold">@Model.Title</h3>
-                        <hr />
-                        <p class="card-text"><strong>🎬 Regizor:</strong> @(Model.Director != null ? Model.Director.Name : "N/A")</p>
-                        <p class="card-text"><strong>🎭 Gen:</strong> @(Model.Genre != null ? Model.Genre.Name : "N/A")</p>
-                        <p class="card-text"><strong>📅 An lansare:</strong> @Model.ReleaseYear</p>
-                        <p class="card-text"><strong>⏱️ Durată:</strong> @Model.RuntimeMinutes min</p>
+    body {
+        background-color: #fdfdfd;
+    }
 
-                        <div class="alert alert-info mt-3 py-2 border-0 shadow-sm" style="background-color: #e3f2fd;">
-                            <i class="bi bi-robot"></i> Acest film a fost calculat de AI ca având cel mai mare potențial de succes.
+    
+    .header-text {
+        color: var(--color-dark);
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .divider-small {
+        height: 4px;
+        width: 60px;
+        background-color: var(--color-accent);
+        border-radius: 10px;
+        margin: 0 auto 40px auto;
+    }
+
+  
+    .result-card {
+        background: #fff;
+        border-radius: 24px;
+        border: none;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.08);
+        overflow: hidden;
+        padding: 30px;
+    }
+
+    
+    .movie-poster-wrapper {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+       
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .movie-poster-img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    
+    .score-badge {
+        background-color: #e0f7fa;
+        color: var(--color-primary);
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 8px 18px;
+        border-radius: 50px;
+        display: inline-block;
+        margin-bottom: 20px;
+        border: 1px solid rgba(20, 108, 134, 0.2);
+    }
+
+    .movie-title-rec {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--color-dark);
+        margin-bottom: 10px;
+        line-height: 1.1;
+    }
+
+    .rating-rec {
+        font-size: 1.3rem;
+        color: #ffc107; 
+        font-weight: 700;
+        margin-bottom: 25px;
+        display: block;
+    }
+
+    .info-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #adb5bd;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--color-dark);
+        margin-bottom: 20px;
+    }
+
+    .overview-text {
+        color: #6c757d;
+        line-height: 1.6;
+        font-size: 1rem;
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+
+    
+    .btn-details-teal {
+        background-color: var(--color-primary);
+        color: white;
+        padding: 12px 35px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(20, 108, 134, 0.2);
+        display: inline-flex;
+        align-items: center;
+        font-size: 1rem;
+    }
+
+        .btn-details-teal:hover {
+            background-color: var(--color-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(20, 108, 134, 0.3);
+        }
+
+    .btn-back-outline {
+        background-color: transparent;
+        border: 2px solid #e9ecef;
+        color: #6c757d;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        margin-right: 15px;
+    }
+
+        .btn-back-outline:hover {
+            border-color: var(--color-dark);
+            color: var(--color-dark);
+        }
+</style>
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center mb-5">
+            <h2 class="header-text display-5">Analiza Robotului s-a încheiat!</h2>
+            <p class="text-muted">Robotul a analizat baza de date și a ales acest film special pentru tine:</p>
+            <div class="divider-small"></div>
+        </div>
+
+        <div class="col-lg-10">
+            <div class="result-card text-start">
+                <div class="row align-items-center">
+
+                    <div class="col-md-5 mb-4 mb-md-0 text-center">
+                        <div class="movie-poster-wrapper">
+                            @if (!string.IsNullOrEmpty(Model.PosterUrl))
+                            {
+                                <img src="@Model.PosterUrl" alt="@Model.Title" class="movie-poster-img" />
+                            }
+                            else
+                            {
+                                <div class="py-5 text-muted">
+                                    <i class="bi bi-film display-1"></i>
+                                    <p class="mt-2 mb-0">Fără Imagine</p>
+                                </div>
+                            }
                         </div>
+                    </div>
+
+                    <div class="col-md-7 ps-md-4">
+
+                        <div class="score-badge">
+                            <i class="bi bi-robot me-2"></i> Scor Predicție: @ViewBag.PredictionScore
+                        </div>
+
+                        <h1 class="movie-title-rec">@Model.Title</h1>
+
+                        <span class="rating-rec">
+                            <i class="bi bi-star-fill text-warning"></i> @Model.IMDBRating <span class="text-muted fs-6 fw-normal">/ 10</span>
+                        </span>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <span class="info-label">GEN</span>
+                                <div class="info-value">@(Model.Genre?.Name ?? "N/A")</div>
+                            </div>
+                            <div class="col-6">
+                                <span class="info-label">DURATĂ</span>
+                                <div class="info-value">@Model.RuntimeMinutes min</div>
+                            </div>
+                            <div class="col-6">
+                                <span class="info-label">REGIZOR</span>
+                                <div class="info-value">@(Model.Director?.Name ?? "-")</div>
+                            </div>
+                            <div class="col-6">
+                                <span class="info-label">ACTOR PRINCIPAL</span>
+                                <div class="info-value">@(Model.Actor?.Name ?? "-")</div>
+                            </div>
+                        </div>
+
+                        <p class="overview-text">
+                            @Model.Overview
+                        </p>
+
+                        <div class="mt-4">
+                            <a asp-action="Index" class="btn-back-outline">
+                                <i class="bi bi-arrow-left me-1"></i> Înapoi
+                            </a>
+
+                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@Model.Id" class="btn-details-teal">
+                                Vezi detalii complete
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
-    }
-    else
-    {
-        <div class="alert alert-warning">Nu am găsit nicio recomandare.</div>
-    }
-
-    <div class="mt-4">
-        <a asp-action="Index" class="btn btn-outline-primary px-4">🔄 Încearcă alt gen</a>
     </div>
+
 </div>

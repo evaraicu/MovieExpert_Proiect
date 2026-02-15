@@ -40,25 +40,36 @@ namespace MovieExpert_Proiect.Controllers
         }
 
         // GET: Reviews/Create
-        public IActionResult Create()
+   
+        public IActionResult Create(int? movieId)
         {
-            ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Title");
+            if (movieId.HasValue)
+            {
+                
+                ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Title", movieId.Value);
+            }
+            else
+            {
+               
+                ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Title");
+            }
+
             return View();
         }
 
         // POST: Reviews/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // AM ADAUGAT "ReviewDate" AICI JOS:
         public async Task<IActionResult> Create([Bind("Id,UserName,Content,Rating,Sentiment,MovieId,ReviewDate")] Review review)
         {
-            // FIX VALIDARE: Ignorăm obiectul Movie, ne interesează doar MovieId
             ModelState.Remove("Movie");
 
             if (ModelState.IsValid)
             {
                 _context.Add(review);
                 await _context.SaveChangesAsync();
+
+              
                 return RedirectToAction(nameof(Index));
             }
             ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Title", review.MovieId);
@@ -79,12 +90,10 @@ namespace MovieExpert_Proiect.Controllers
         // POST: Reviews/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // AM ADAUGAT "ReviewDate" SI AICI JOS:
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,Content,Rating,Sentiment,MovieId,ReviewDate")] Review review)
         {
             if (id != review.Id) return NotFound();
 
-            // FIX VALIDARE
             ModelState.Remove("Movie");
 
             if (ModelState.IsValid)

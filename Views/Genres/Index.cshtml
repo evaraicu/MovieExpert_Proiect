@@ -4,132 +4,116 @@
     ViewData["Title"] = "Explorați după Gen";
 }
 
-<div class="container mt-4">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold text-dark">Ce gen de film cauți?</h2>
-        <p class="text-muted">Alege o categorie pentru a vedea toate titlurile noastre</p>
-        <div class="mx-auto bg-primary rounded-pill" style="height: 3px; width: 60px;"></div>
-    </div>
-
-    <div class="text-end mb-4">
-        <a asp-action="Create" class="btn btn-outline-primary btn-sm rounded-pill px-4 shadow-sm">
-            <i class="bi bi-plus-circle-fill me-1"></i> Adaugă Gen Nou
-        </a>
-    </div>
-
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
-        @foreach (var item in Model)
-        {
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm genre-card transition overflow-hidden">
-                    <a asp-controller="Movies" asp-action="Index" asp-route-genreFilter="@item.Name" class="stretched-link text-decoration-none">
-                        <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-center">
-                            <div class="genre-icon-wrapper mb-3 shadow-sm">
-                                @switch (item.Name.ToLower())
-                                {
-                                    case "action":
-                                    case "acțiune":
-                                        <i class="bi bi-fire text-danger"></i>
-                                        ; break;
-                                    case "comedy":
-                                    case "comedie":
-
-                                        <i class="bi bi-emoji-laughing text-warning"></i>
-                                        ; break;
-                                    case "horror":
-
-                                        <i class="bi bi-ghost text-dark"></i>
-                                        ; break;
-                                    case "drama":
-                                    case "dramă":
-
-                                        <i class="bi bi-mask text-primary"></i>
-                                        ; break;
-                                    case "romance":
-                                    case "dragoste":
-
-                                        <i class="bi bi-heart-fill text-danger"></i>
-                                        ; break;
-                                    case "scifi":
-                                    case "sf":
-
-                                        <i class="bi bi-rocket-takeoff text-info"></i>
-                                        ; break;
-                                    case "thriller":
-
-                                        <i class="bi bi-incognito text-secondary"></i>
-                                        ; break;
-                                    case "animation":
-                                    case "animație":
-
-                                        <i class="bi bi-palette text-success"></i>
-                                        ; break;
-                                    case "adventure":
-                                    case "aventură":
-
-                                        <i class="bi bi-compass text-warning"></i>
-                                        ; break;
-                                    case "fantasy":
-                                    case "fantezie":
-
-                                        <i class="bi bi-magic text-info"></i>
-                                        ; break;
-                                    default:
-
-                                        <i class="bi bi-film text-muted"></i>
-                                        ; break;
-                                }
-                            </div>
-                            <h5 class="fw-bold text-dark mb-1">@item.Name</h5>
-                            <span class="badge rounded-pill bg-light text-primary border px-3 py-1 small mt-2">Vezi Filme</span>
-                        </div>
-                    </a>
-
-                    <div class="admin-panel">
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn-admin text-warning"><i class="bi bi-pencil-square"></i></a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn-admin text-danger"><i class="bi bi-trash"></i></a>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-</div>
-
 <style>
-    body {
-        background-color: #f4f7f6;
+   
+    :root {
+        --color-primary: #146c86; 
+        --color-dark: #2b4955; 
+        --color-accent: #ecac98; 
     }
 
+   
+    .page-title {
+        color: var(--color-dark);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .divider-custom {
+        height: 4px;
+        width: 60px;
+        background-color: var(--color-accent); 
+        border-radius: 10px;
+        margin: 0 auto;
+    }
+
+    
+    .btn-add-genre {
+        background-color: var(--color-primary);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(20, 108, 134, 0.2);
+        transition: all 0.2s;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-add-genre:hover {
+            background-color: var(--color-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(20, 108, 134, 0.3);
+        }
+
+ 
     .genre-card {
-        border-radius: 20px;
-        background: #ffffff;
-        min-height: 180px;
+        border: none;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        transition: all 0.3s ease;
         position: relative;
+        overflow: hidden;
+        height: 100%;
+        text-align: center;
+      
+        border-bottom: 4px solid transparent;
     }
 
         .genre-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            
+            border-bottom-color: var(--color-primary);
         }
 
+   
     .genre-icon-wrapper {
-        width: 70px;
-        height: 70px;
-        background-color: #f8f9fa;
-        border-radius: 20px;
+        width: 80px;
+        height: 80px;
+        background-color: #f8f9fa; 
+        border-radius: 50%; 
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
+        margin: 0 auto 15px auto;
         transition: all 0.3s ease;
+        font-size: 2.5rem;
     }
 
     .genre-card:hover .genre-icon-wrapper {
+        background-color: rgba(20, 108, 134, 0.1); 
         transform: scale(1.1) rotate(5deg);
-        background-color: #fff;
     }
 
-    .admin-panel {
+    
+    .genre-name {
+        font-weight: 700;
+        color: var(--color-dark);
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .explore-link {
+        color: var(--color-primary);
+        font-size: 0.85rem;
+        font-weight: 600;
+        opacity: 0; 
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+    }
+
+    .genre-card:hover .explore-link {
+        opacity: 1; 
+        transform: translateY(0);
+    }
+
+    
+    .admin-actions {
         position: absolute;
         top: 10px;
         right: 10px;
@@ -137,27 +121,175 @@
         flex-direction: column;
         gap: 5px;
         opacity: 0;
-        z-index: 10;
-        transition: opacity 0.3s;
+        transition: opacity 0.2s ease;
+        z-index: 5;
     }
 
-    .genre-card:hover .admin-panel {
-        opacity: 1;
+    .genre-card:hover .admin-actions {
+        opacity: 1; 
     }
 
-    .btn-admin {
-        background: white;
+    .btn-mini-action {
         width: 30px;
         height: 30px;
-        border-radius: 8px;
+        border-radius: 50%;
+        background: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        text-decoration: none;
+        color: #adb5bd;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+        font-size: 0.8rem;
     }
 
-    .transition {
-        transition: all 0.3s ease-in-out;
-    }
+        .btn-mini-action:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-mini-action.delete:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
 </style>
+
+<div class="container mt-5 mb-5">
+
+    <div class="text-center mb-5">
+        <h2 class="page-title">Genuri de Film</h2>
+        <p class="text-muted small">Alege o categorie pentru a explora colecția</p>
+        <div class="divider-custom"></div>
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-controller="Genres" asp-action="Create" class="btn-add-genre">
+            <i class="bi bi-plus-lg me-2"></i> Adaugă Gen
+        </a>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="genre-card">
+
+                    <div class="admin-actions">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn-mini-action" title="Editează">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn-mini-action delete" title="Șterge">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+
+                    <a asp-controller="Movies" asp-action="Index" asp-route-genreFilter="@item.Name" class="text-decoration-none stretched-link" style="z-index: 1;">
+                        <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center h-100">
+
+                            <div class="genre-icon-wrapper shadow-sm">
+                                <span>
+                                    @switch (item.Name.ToLower())
+                                    {
+                                        case "action":
+                                        case "acțiune":
+                                            @:💥
+                                            break;
+                                        case "comedy":
+                                        case "comedie":
+
+                                            @:😂
+                                            break;
+                                        case "horror":
+
+                                            @:👻
+                                            break;
+                                        case "drama":
+                                        case "dramă":
+
+                                            @:🎭
+                                            break;
+                                        case "romance":
+                                        case "dragoste":
+
+                                            @:❤️
+                                            break;
+                                        case "scifi":
+                                        case "sf":
+                                        case "science fiction":
+
+                                            @:👽
+                                            break;
+                                        case "thriller":
+
+                                            @:😱
+                                            break;
+                                        case "animation":
+                                        case "animație":
+
+                                            @:🎨
+                                            break;
+                                        case "adventure":
+                                        case "aventură":
+
+                                            @:🗺️
+                                            break;
+                                        case "fantasy":
+                                        case "fantezie":
+
+                                            @:🦄
+                                            break;
+                                        case "crime":
+                                        case "crimă":
+
+                                            @:🕵️
+                                            break;
+                                        case "mystery":
+                                        case "mister":
+
+                                            @:🔍
+                                            break;
+                                        case "western":
+
+                                            @:🤠
+                                            break;
+                                        case "family":
+                                        case "familie":
+
+                                            @:👨‍👩‍👧‍👦
+                                            break;
+                                        case "biography":
+                                        case "biografie":
+
+                                            @:📜
+                                            break;
+                                        case "musical":
+
+                                            @:🎵
+                                            break;
+                                        case "war":
+                                        case "razboi":
+
+                                            @:⚔️
+                                            break;
+                                        default:
+
+                                            @:🎬
+                                            break;
+                                    }
+                                </span>
+                            </div>
+
+                            <h5 class="genre-name">@item.Name</h5>
+                            <span class="explore-link">
+                                Explorează <i class="bi bi-arrow-right ms-1"></i>
+                            </span>
+
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>

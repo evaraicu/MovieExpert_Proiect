@@ -1,33 +1,154 @@
 ﻿@model MovieExpert_Proiect.Models.Genre
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Adaugă Gen Nou";
 }
 
-<h1>Create</h1>
+<style>
+    
+    :root {
+        --color-primary: #146c86; 
+        --color-dark: #2b4955;
+        --color-accent: #ecac98; 
+    }
 
-<h4>Genre</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+   
+    .create-card {
+        background: #fff;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        overflow: hidden;
+        max-width: 600px;
+        margin: 3rem auto; 
+    }
+
+    
+    .card-header-custom {
+        background-color: var(--color-dark);
+        color: white;
+        text-align: center;
+        padding: 25px;
+        border-bottom: 4px solid var(--color-accent);
+    }
+
+    .card-body-custom {
+        padding: 40px;
+    }
+
+    
+    .form-label {
+        font-weight: 700;
+        color: var(--color-dark);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-right: none;
+        color: var(--color-primary);
+    }
+
+    .form-control {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-left: none;
+        padding: 12px;
+        transition: all 0.2s;
+    }
+
+        .form-control:focus {
+            background-color: #fff;
+            border-color: var(--color-primary);
+            box-shadow: none; 
+            outline: 2px solid rgba(20, 108, 134, 0.1);
+        }
+
+            
+            .form-control:focus + .input-group-text,
+            .input-group:focus-within .input-group-text {
+                background-color: #fff;
+                border-color: var(--color-primary);
+            }
+
+    
+    .btn-turcoaz {
+        background-color: var(--color-primary) !important;
+        color: white !important;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(20, 108, 134, 0.2);
+    }
+
+        .btn-turcoaz:hover {
+            background-color: var(--color-dark) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(20, 108, 134, 0.3);
+        }
+
+    .btn-cancel {
+        color: #6c757d;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 10px 20px;
+        transition: color 0.2s;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+        .btn-cancel:hover {
+            color: var(--color-dark);
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container">
+
+    <div class="create-card">
+
+        <div class="card-header-custom">
+            <h3 class="m-0 fw-bold"><i class="bi bi-plus-circle-fill me-2"></i>Adaugă Gen</h3>
+        </div>
+
+        <div class="card-body-custom">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-4">
+                    <label asp-for="Name" class="form-label">Nume Gen</label>
+                    <div class="input-group">
+                        <span class="input-group-text rounded-start">
+                            <i class="bi bi-tag-fill"></i>
+                        </span>
+                        <input asp-for="Name" class="form-control rounded-end" placeholder="Ex: Science Fiction" />
+                    </div>
+                    <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="d-grid gap-2 mt-5 text-center">
+                    <button type="submit" class="btn btn-turcoaz w-100">
+                        SALVEAZĂ GENUL
+                    </button>
+
+                    <a asp-action="Index" class="btn-cancel">
+                        Renunță și Înapoi
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

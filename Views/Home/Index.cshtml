@@ -1,8 +1,170 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model MovieExpert_Proiect.Models.DashboardViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .kpi-card {
+        transition: all 0.3s ease; 
+        cursor: default;
+    }
+
+        .kpi-card:hover {
+            transform: translateY(-10px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important; 
+            filter: brightness(1.1);
+        }
+</style>
+
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold" style="color: var(--color-primary);">MovieExpert Dashboard</h1>
+    <p class="lead text-muted">Statistici în timp real despre colecția de filme</p>
 </div>
+
+<div class="row mb-4 g-4">
+
+    <div class="col-md-4">
+        <div class="card text-white shadow h-100 border-0 kpi-card" style="background-color: var(--color-primary);">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="fs-5 opacity-75"><i class="bi bi-film me-2"></i>Total Filme</div>
+                    <i class="bi bi-camera-reels fs-1 opacity-50"></i>
+                </div>
+                <h2 class="display-4 fw-bold mb-0">@Model.TotalMovies</h2>
+                <p class="small opacity-75 mt-2 mb-0">Titluri în colecție</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white shadow h-100 border-0 kpi-card" style="background-color: var(--color-dark);">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="fs-5 opacity-75"><i class="bi bi-chat-quote me-2"></i>Recenzii</div>
+                    <i class="bi bi-people fs-1 opacity-50"></i>
+                </div>
+                <h2 class="display-4 fw-bold mb-0">@Model.TotalReviews</h2>
+                <p class="small opacity-75 mt-2 mb-0">Opinii utilizatori</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white shadow h-100 border-0 kpi-card" style="background-color: var(--color-accent);">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="fs-5 opacity-75"><i class="bi bi-star-fill me-2"></i>Rating IMDb</div>
+                    <i class="bi bi-trophy fs-1 opacity-50"></i>
+                </div>
+                <h2 class="display-4 fw-bold mb-0">@Model.GlobalAverageRating.ToString("0.0")</h2>
+                <p class="small opacity-75 mt-2 mb-0">Media globală</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow h-100 border-0">
+            <div class="card-header bg-white fw-bold py-3 border-bottom-0">
+                <i class="bi bi-table text-primary me-2"></i> Detalii pe Genuri
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-light text-muted small text-uppercase">
+                        <tr>
+                            <th class="ps-4">Gen</th>
+                            <th class="text-center">Nr. Filme</th>
+                            <th class="text-end pe-4">Rating Mediu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var genre in Model.GenreStats)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="fw-bold" style="color: var(--color-dark);">@genre.GenreName</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-light text-dark border">@genre.MovieCount</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <span class="fw-bold fs-5" style="color: var(--color-accent)">
+                                        @genre.AverageRating.ToString("0.0")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow h-100 border-0">
+            <div class="card-header bg-white fw-bold py-3 border-bottom-0">
+                <i class="bi bi-pie-chart-fill text-primary me-2"></i> Distribuția Filmelor
+            </div>
+            <div class="card-body">
+                <canvas id="genresChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const labels = @Html.Raw(JsonSerializer.Serialize(Model.ChartLabels));
+        const dataValues = @Html.Raw(JsonSerializer.Serialize(Model.ChartValues));
+
+        const customColors = [
+            '#146c86', 
+            '#ecac98', 
+            '#558a9f', 
+            '#2b4955', 
+            '#b1c9cd', 
+            '#c22824'  
+        ];
+
+        const ctx = document.getElementById('genresChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Număr de filme',
+                    data: dataValues,
+                    backgroundColor: customColors,
+                    borderRadius: 6,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f0f0f0' },
+                        ticks: { font: { family: "'Inter', sans-serif" } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: "'Inter', sans-serif" } }
+                    }
+                }
+            }
+        });
+    </script>
+}

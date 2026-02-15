@@ -1,116 +1,264 @@
 ﻿@model IEnumerable<MovieExpert_Proiect.Models.Movie>
 
 @{
-    ViewData["Title"] = "Filme";
+    ViewData["Title"] = "Toate Filmele";
 }
 
-<div class="container mt-4" style="max-width: 850px;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-dark" style="font-size: 1.4rem;">Listă Filme</h2>
-        <a asp-action="Create" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
-            <i class="bi bi-plus"></i> Adaugă Film
-        </a>
+<style>
+    
+    .btn-turcoaz {
+        background-color: #146c86 !important; 
+        color: white !important;
+        border: 1px solid #146c86 !important;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(20, 108, 134, 0.2);
+    }
+
+        .btn-turcoaz:hover {
+            background-color: #10566b !important; 
+            border-color: #10566b !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(20, 108, 134, 0.4);
+        }
+
+    
+    .movie-card-horizontal {
+        background: #fff;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        border-left: 5px solid var(--color-primary);
+    }
+
+        .movie-card-horizontal:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+    .poster-container {
+        width: 100px;
+        height: 150px;
+        flex-shrink: 0;
+        background-color: #f0f2f5;
+        position: relative;
+    }
+
+    .movie-poster {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card-content {
+        padding: 15px 20px;
+        flex-grow: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .movie-info {
+        max-width: 70%;
+    }
+
+    .movie-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-dark);
+        margin-bottom: 5px;
+    }
+
+    .movie-meta {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .genre-badge {
+        background-color: #f8f9fa;
+        color: var(--color-dark);
+        border: 1px solid #dee2e6;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .rating-box {
+        background-color: var(--color-accent);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        box-shadow: 0 3px 10px rgba(236, 172, 152, 0.4);
+    }
+
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border: 1px solid #e9ecef;
+        color: #6c757d;
+        transition: all 0.2s;
+    }
+
+        .action-btn:hover {
+            background-color: var(--color-primary);
+            color: white; 
+            border-color: var(--color-primary);
+        }
+
+        .action-btn.delete:hover {
+            background-color: var(--color-danger);
+            color: red;
+            border-color: var(--color-danger);
+        }
+
+    .filter-box {
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+</style>
+
+<div class="container-fluid px-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+        <div>
+            <h2 class="fw-bold mb-0" style="color: var(--color-dark);">Toate Filmele</h2>
+            <p class="text-muted small mb-0">Gestionează colecția ta (@Model.Count() titluri)</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="GetRandomTrivia" class="btn text-white shadow-sm d-flex align-items-center rounded-pill" style="background-color: var(--color-accent);">
+                <i class="bi bi-dice-5-fill me-2"></i> Trivia Random
+            </a>
+            <a asp-action="Create" class="btn text-white shadow-sm d-flex align-items-center rounded-pill" style="background-color: var(--color-primary);">
+                <i class="bi bi-plus-lg me-2"></i> Adaugă Film
+            </a>
+        </div>
     </div>
 
-    <div class="mb-4">
-        <form asp-controller="Movies" asp-action="Index" method="get">
-            <div class="input-group input-group-sm shadow-sm rounded-pill overflow-hidden bg-white border">
-                <span class="input-group-text bg-white border-0 ps-3"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control border-0 shadow-none" placeholder="Caută un film..." />
-                <button type="submit" class="btn btn-white border-0 text-primary fw-bold px-3">Caută</button>
+    @if (TempData["TriviaFact"] != null)
+    {
+        <div class="alert shadow-sm border-0 mb-4 d-flex align-items-center bg-white" role="alert" style="border-left: 5px solid var(--color-accent);">
+            <div class="me-3" style="font-size: 2rem;">@TempData["TriviaEmoji"]</div>
+            <div>
+                <h6 class="fw-bold mb-0" style="color: var(--color-dark);">Știai asta despre "@TempData["TriviaMovie"]"?</h6>
+                <small class="text-muted">@TempData["TriviaFact"]</small>
+            </div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["TriviaError"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show rounded-pill mb-4" role="alert">
+            @TempData["TriviaError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="filter-box mb-4">
+        <form asp-action="Index" method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="small fw-bold text-muted text-uppercase">Caută</label>
+                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control form-control-sm border-0 bg-light" placeholder="Titlu sau regizor..." />
+            </div>
+
+            <div class="col-md-3">
+                <label class="small fw-bold text-muted text-uppercase">Sortează după</label>
+                <select name="sortOrder" class="form-select form-select-sm border-0 bg-light">
+                    <option value="" selected="@(ViewData["CurrentSort"] == null || ViewData["CurrentSort"].ToString() == "" ? "selected" : null)">Implicit (Alfabetic)</option>
+                    <option value="rating_desc" selected="@(ViewData["CurrentSort"]?.ToString() == "rating_desc" ? "selected" : null)">Rating IMDb: Descrescător</option>
+                    <option value="rating_asc" selected="@(ViewData["CurrentSort"]?.ToString() == "rating_asc" ? "selected" : null)">Rating IMDb: Crescător</option>
+                    <option value="year_desc" selected="@(ViewData["CurrentSort"]?.ToString() == "year_desc" ? "selected" : null)">Anul apariției: Descrescător</option>
+                    <option value="year_asc" selected="@(ViewData["CurrentSort"]?.ToString() == "year_asc" ? "selected" : null)">Anul apariției: Crescător</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="small fw-bold text-muted text-uppercase">Anul apariției</label>
+                <input type="number" name="year" value="@ViewData["Year"]" min="1900" max="2100" class="form-control form-control-sm border-0 bg-light" placeholder="Ex: 2023" />
+            </div>
+
+            <div class="col-md-2">
+                <label class="small fw-bold text-muted text-uppercase">Rating Min.</label>
+                <input type="number" step="0.1" name="minRating" value="@ViewData["MinRating"]" min="1" max="10" class="form-control form-control-sm border-0 bg-light" placeholder="--" />
+            </div>
+
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-sm rounded-pill fw-bold text-white" style="background-color: var(--color-dark);">Aplică</button>
             </div>
         </form>
     </div>
 
-    <div class="movie-list-container">
+    <div class="movie-list">
         @foreach (var item in Model)
         {
-            <div class="movie-item-row mb-2 shadow-sm border rounded-3 bg-white transition p-2">
-                <div class="d-flex align-items-center">
+            <div class="movie-card-horizontal">
 
-                    <div class="poster-mini-wrap">
-                        @if (!string.IsNullOrEmpty(item.PosterUrl))
-                        {
-                            <img src="@item.PosterUrl" class="poster-mini" alt="@item.Title" />
-                        }
-                        else
-                        {
-                            <div class="poster-placeholder"><i class="bi bi-film"></i></div>
-                        }
-                    </div>
+                <div class="poster-container">
+                    @if (!string.IsNullOrEmpty(item.PosterUrl))
+                    {
+                        <img src="@item.PosterUrl" class="movie-poster" alt="@item.Title" loading="lazy">
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center h-100 w-100 text-muted">
+                            <i class="bi bi-film fs-3 opacity-25"></i>
+                        </div>
+                    }
+                </div>
 
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="mb-0 fw-bold text-dark">@item.Title</h6>
-                        <div class="text-muted" style="font-size: 0.75rem;">
-                            <span class="badge bg-light text-dark border p-1"><i class="bi bi-star-fill text-warning"></i> @item.IMDBRating</span>
-                            <span class="ms-2">@item.ReleaseYear • @item.Genre?.Name</span>
+                <div class="card-content">
+
+                    <div class="movie-info">
+                        <h3 class="movie-title">@item.Title</h3>
+
+                        <div class="movie-meta">
+                            <span><i class="bi bi-calendar3 me-1 text-primary"></i> @item.ReleaseYear</span>
+                            <span><i class="bi bi-person-fill me-1 text-primary"></i> @(item.Director?.Name ?? "N/A")</span>
+                            <span class="genre-badge">@(item.Genre?.Name ?? "N/A")</span>
                         </div>
                     </div>
 
-                    <div class="d-flex gap-1 pe-2">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light border shadow-sm rounded-circle" title="Detalii"><i class="bi bi-eye text-primary"></i></a>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light border shadow-sm rounded-circle" title="Editează"><i class="bi bi-pencil text-warning"></i></a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light border shadow-sm rounded-circle" title="Șterge"><i class="bi bi-trash text-danger"></i></a>
+                    <div class="d-flex align-items-center gap-4">
+
+                        <div class="text-center">
+                            <div class="rating-box">
+                                <i class="bi bi-star-fill me-1 small"></i>@item.IMDBRating
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-turcoaz rounded-pill px-3 fw-bold">
+                                Detalii
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="action-btn" title="Editează">
+                                <i class="bi bi-pencil-fill small"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="action-btn delete" title="Șterge">
+                                <i class="bi bi-trash-fill small"></i>
+                            </a>
+                        </div>
                     </div>
+
                 </div>
             </div>
         }
     </div>
+
 </div>
-
-<style>
-    body {
-        background-color: #f9fafb;
-    }
-
-    .movie-item-row {
-        transition: transform 0.2s, border-color 0.2s;
-    }
-
-        .movie-item-row:hover {
-            transform: translateX(5px);
-            border-color: #007bff;
-        }
-
-    .poster-mini-wrap {
-        width: 45px;
-        height: 65px;
-        flex-shrink: 0;
-        border-radius: 4px;
-        overflow: hidden;
-        background-color: #fff; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #eee;
-    }
-
-    .poster-mini {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; 
-    }
-
-    .poster-placeholder {
-        color: #ccc;
-        font-size: 1.2rem;
-    }
-
-    .btn-light {
-        width: 30px;
-        height: 30px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-    }
-
-    .transition {
-        transition: all 0.2s ease-in-out;
-    }
-
-    .shadow-sm {
-        box-shadow: 0 .125rem .25rem rgba(0,0,0,.04) !important;
-    }
-</style>

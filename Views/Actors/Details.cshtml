@@ -4,47 +4,84 @@
     ViewData["Title"] = "Detalii Actor";
 }
 
-<h1>Detalii Actor</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body p-5 text-center bg-light rounded">
+            <div class="mb-3">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 100px; height: 100px; font-size: 40px;">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+            </div>
+            <h1 class="display-5 fw-bold">@Model.Name</h1>
+            <p class="text-muted lead">Actor</p>
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
-    </dl>
-</div>
+            <div class="mt-4">
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-pencil"></i> Editează
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Înapoi la listă
+                </a>
+            </div>
+        </div>
+    </div>
 
-<hr />
-<h4>Filme în care a jucat (Sarcina Laborator 3)</h4>
+    <h3 class="mb-3 border-bottom pb-2">Filmografie</h3>
 
-@if (Model.Movies != null && Model.Movies.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Titlu Film</th>
-                <th>An</th>
-                <th>Rating</th>
-            </tr>
-        </thead>
-        <tbody>
+    @if (Model.Movies != null && Model.Movies.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
             @foreach (var movie in Model.Movies)
             {
-                <tr>
-                    <td>@movie.Title</td>
-                    <td>@movie.ReleaseYear</td>
-                    <td>@movie.IMDBRating</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Nu există filme înregistrate pentru acest actor.</p>
-}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 hover-shadow transition-card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-primary">
+                                <i class="bi bi-film me-2"></i> @movie.Title
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                @movie.ReleaseYear
+                                @if (movie.Genre != null)
+                                {
+                                    <span> • @movie.Genre.Name</span>
+                                }
+                            </h6>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+                            <p class="card-text text-truncate">
+                                @movie.Overview
+                            </p>
+
+                            <div class="mt-3">
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-star-fill"></i> @movie.IMDBRating
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 text-end">
+                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-sm btn-primary">
+                                Detalii Film
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle me-2"></i> Nu există filme înregistrate pentru acest actor.
+        </div>
+    }
 </div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+    }
+
+    .transition-card {
+        transition: all 0.3s ease;
+    }
+</style>

@@ -1,35 +1,276 @@
 ﻿@model IEnumerable<MovieExpert_Proiect.Models.Actor>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Actori";
 }
 
-<h1>Index</h1>
+<style>
+    
+    :root {
+        --color-primary: #146c86; 
+        --color-dark: #2b4955; 
+        --color-accent: #ecac98; 
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+  
+    .page-title {
+        color: var(--color-dark);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .divider-custom {
+        height: 4px;
+        width: 60px;
+        background-color: var(--color-accent);
+        border-radius: 10px;
+        margin: 0 auto;
+    }
+
+
+    .search-container {
+        max-width: 500px;
+        margin: 1.5rem auto; 
+        position: relative;
+    }
+
+    .search-input {
+        background-color: #fff;
+        border: 2px solid #e9ecef;
+        padding: 12px 20px;
+        padding-right: 50px; 
+        border-radius: 50px;
+        width: 100%;
+        transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        color: var(--color-dark);
+    }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 15px rgba(20, 108, 134, 0.15);
+            outline: none;
+        }
+
+    .btn-search-icon {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--color-dark);
+        color: white;
+        border: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+        .btn-search-icon:hover {
+            background: var(--color-primary);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+    
+    .btn-add-custom {
+        background-color: var(--color-primary);
+        color: white;
+        padding: 8px 24px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(20, 108, 134, 0.2);
+        transition: all 0.2s;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-add-custom:hover {
+            background-color: var(--color-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(20, 108, 134, 0.3);
+        }
+
+   
+    .actor-card {
+        border: none;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        text-align: center;
+        border-bottom: 4px solid transparent;
+    }
+
+        .actor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            border-bottom-color: var(--color-primary); 
+        }
+
+  
+    .actor-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background-color: #f8f9fa;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px auto;
+        transition: all 0.3s ease;
+        font-size: 2.2rem;
+        color: var(--color-dark);
+    }
+
+    .actor-card:hover .actor-icon-wrapper {
+        background-color: rgba(20, 108, 134, 0.1); 
+        color: var(--color-primary);
+        transform: scale(1.1);
+    }
+
+    
+    .actor-name {
+        font-weight: 700;
+        color: var(--color-dark);
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .explore-label {
+        color: var(--color-primary);
+        font-size: 0.85rem;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+    }
+
+    .actor-card:hover .explore-label {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    
+    .admin-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        z-index: 5;
+    }
+
+    .actor-card:hover .admin-actions {
+        opacity: 1;
+    }
+
+    .btn-mini-action {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+        font-size: 0.8rem;
+        text-decoration: none;
+    }
+
+        .btn-mini-action:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-mini-action.delete:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+</style>
+
+<div class="container mt-5 mb-5">
+
+    <div class="text-center mb-4">
+        <h2 class="page-title">Actori</h2>
+        <p class="text-muted small mb-3">Descoperă talentele care dau viață poveștilor</p>
+
+        <div class="search-container">
+            <form asp-action="Index" method="get">
+                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="search-input" placeholder="Caută un actor..." autocomplete="off">
+                <button type="submit" class="btn-search-icon" title="Caută">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="divider-custom mt-4"></div>
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-action="Create" class="btn-add-custom">
+            <i class="bi bi-plus-lg me-2"></i> Adaugă Actor
+        </a>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <div class="text-muted fs-1 mb-2">🤷‍♂️</div>
+                <h5 class="text-muted">Nu am găsit niciun actor cu acest nume.</h5>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary rounded-pill mt-2">Vezi toți actorii</a>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="actor-card">
+
+                        <div class="admin-actions">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn-mini-action" title="Editează">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn-mini-action delete" title="Șterge">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>
+
+                        <a asp-controller="Movies" asp-action="Index" asp-route-searchString="@item.Name" class="text-decoration-none stretched-link" style="z-index: 1;">
+                            <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center h-100">
+
+                                <div class="actor-icon-wrapper shadow-sm">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+
+                                <h5 class="actor-name">@item.Name</h5>
+                                <span class="explore-label">
+                                    Vezi Filmografie <i class="bi bi-arrow-right ms-1"></i>
+                                </span>
+
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

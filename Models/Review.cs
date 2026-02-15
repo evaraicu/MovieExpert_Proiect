@@ -23,11 +23,9 @@ namespace MovieExpert_Proiect.Models
 
         public string? Sentiment { get; set; }
 
-        // --- RELAȚIA CU FILMUL ---
-        // Cheia străină (Foreign Key)
+        
         public int MovieId { get; set; }
 
-        // Obiectul de navigare (Navigation Property)
         public Movie Movie { get; set; }
     }
 }

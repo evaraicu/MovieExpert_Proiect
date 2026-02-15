@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "MovieTrivia_GrpcService";
+
+package movietrivia;
+
+
+service TriviaService {
+  rpc GetFunFact (TriviaRequest) returns (TriviaResponse);
+}
+
+
+message TriviaRequest {
+  int32 id = 1;
+  string title = 2;
+  int32 releaseYear = 3;
+  string genre = 4;
+}
+
+
+message TriviaResponse {
+  string funFact = 1;
+  string emoji = 2;
+}

@@ -1,78 +1,180 @@
 ﻿@model MovieExpert_Proiect.Models.Movie
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editează - " + Model.Title;
 }
 
-<h1>Edit Movie</h1>
+<style>
+    
+    .edit-card {
+        background: #fff;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        overflow: hidden;
+        max-width: 900px;
+        margin: 0 auto; 
+    }
 
-<h4>@Model.Title</h4>
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+    .card-header-custom {
+        background-color: var(--color-dark); 
+        color: white;
+        padding: 20px 30px;
+        border-bottom: 4px solid var(--color-accent); 
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
+    .card-body-custom {
+        padding: 30px;
+    }
 
-            <div class="row">
-                <div class="col-md-6 form-group mb-3">
-                    <label asp-for="ReleaseYear" class="control-label"></label>
-                    <input asp-for="ReleaseYear" class="form-control" />
-                    <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+    
+    .form-label {
+        font-weight: 600;
+        color: var(--color-dark);
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        padding: 10px 15px;
+        transition: all 0.2s;
+        background-color: #f8f9fa;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--color-primary); 
+            box-shadow: 0 0 0 4px rgba(20, 108, 134, 0.1);
+            background-color: #fff;
+        }
+
+   
+    .btn-save {
+        background-color: var(--color-primary);
+        color: white;
+        padding: 10px 30px;
+        border-radius: 30px;
+        font-weight: bold;
+        border: none;
+        transition: background 0.2s;
+    }
+
+        .btn-save:hover {
+            background-color: var(--color-dark);
+            color: white;
+        }
+
+    .btn-cancel {
+        border: 1px solid #dee2e6;
+        background: white;
+        color: #6c757d;
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+        .btn-cancel:hover {
+            background: #f8f9fa;
+            color: var(--color-dark);
+            border-color: #adb5bd;
+        }
+</style>
+
+<div class="container py-5">
+
+    <div class="edit-card">
+        <div class="card-header-custom">
+            <h3 class="m-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Editează Film</h3>
+            <p class="m-0 opacity-75 small">Modifică detaliile pentru "@Model.Title"</p>
+        </div>
+
+        <div class="card-body-custom">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-4">
+                    <label asp-for="Title" class="form-label">Titlu Film</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-film text-muted"></i></span>
+                        <input asp-for="Title" class="form-control border-start-0" placeholder="Introdu titlul filmului..." />
+                    </div>
+                    <span asp-validation-for="Title" class="text-danger small"></span>
                 </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label asp-for="RuntimeMinutes" class="control-label"></label>
-                    <input asp-for="RuntimeMinutes" class="form-control" />
-                    <span asp-validation-for="RuntimeMinutes" class="text-danger"></span>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label asp-for="ReleaseYear" class="form-label">An Lansare</label>
+                        <input asp-for="ReleaseYear" class="form-control" min="1888" max="2100" />
+                        <span asp-validation-for="ReleaseYear" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="RuntimeMinutes" class="form-label">Durată (min)</label>
+                        <input asp-for="RuntimeMinutes" class="form-control" min="1" placeholder="Ex: 148" />
+                        <span asp-validation-for="RuntimeMinutes" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="IMDBRating" class="form-label">Rating IMDb</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-star-fill text-warning"></i></span>
+                            <input asp-for="IMDBRating" class="form-control border-start-0" step="0.1" min="1" max="10" />
+                        </div>
+                        <span asp-validation-for="IMDBRating" class="text-danger small"></span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="IMDBRating" class="control-label"></label>
-                <input asp-for="IMDBRating" class="form-control" />
-                <span asp-validation-for="IMDBRating" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="PosterUrl" class="control-label"></label>
-                <input asp-for="PosterUrl" class="form-control" />
-                <span asp-validation-for="PosterUrl" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="Overview" class="control-label"></label>
-                <textarea asp-for="Overview" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="Overview" class="text-danger"></span>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 form-group mb-3">
-                    <label asp-for="GenreId" class="control-label">Genre</label>
-                    <select asp-for="GenreId" class="form-control" asp-items="ViewBag.GenreId"></select>
-                    <span asp-validation-for="GenreId" class="text-danger"></span>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label asp-for="GenreId" class="form-label">Gen</label>
+                        <select asp-for="GenreId" class="form-select" asp-items="ViewBag.GenreId"></select>
+                        <span asp-validation-for="GenreId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="DirectorId" class="form-label">Regizor</label>
+                        <select asp-for="DirectorId" class="form-select" asp-items="ViewBag.DirectorId"></select>
+                        <span asp-validation-for="DirectorId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="ActorId" class="form-label">Actor Principal</label>
+                        <select asp-for="ActorId" class="form-select" asp-items="ViewBag.ActorId"></select>
+                        <span asp-validation-for="ActorId" class="text-danger small"></span>
+                    </div>
                 </div>
-                <div class="col-md-4 form-group mb-3">
-                    <label asp-for="DirectorId" class="control-label">Director</label>
-                    <select asp-for="DirectorId" class="form-control" asp-items="ViewBag.DirectorId"></select>
-                    <span asp-validation-for="DirectorId" class="text-danger"></span>
-                </div>
-                <div class="col-md-4 form-group mb-3">
-                    <label asp-for="ActorId" class="control-label">Actor</label>
-                    <select asp-for="ActorId" class="form-control" asp-items="ViewBag.ActorId"></select>
-                    <span asp-validation-for="ActorId" class="text-danger"></span>
-                </div>
-            </div>
 
-            <div class="form-group mt-3">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            </div>
-        </form>
+                <div class="mb-4">
+                    <label asp-for="PosterUrl" class="form-label">URL Poster (Imagine)</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-image text-muted"></i></span>
+                        <input asp-for="PosterUrl" class="form-control border-start-0" placeholder="https://..." />
+                    </div>
+                    <span asp-validation-for="PosterUrl" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Overview" class="form-label">Sinopsis / Descriere</label>
+                    <textarea asp-for="Overview" class="form-control" rows="4" placeholder="Despre ce este filmul..."></textarea>
+                    <span asp-validation-for="Overview" class="text-danger small"></span>
+                </div>
+
+                <hr class="my-4 opacity-25">
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-cancel">Renunță</a>
+                    <button type="submit" class="btn btn-save shadow-sm">
+                        <i class="bi bi-check-lg me-1"></i> Salvează Modificările
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

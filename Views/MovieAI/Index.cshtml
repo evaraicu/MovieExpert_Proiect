@@ -1,46 +1,165 @@
 ﻿@model IEnumerable<MovieExpert_Proiect.Models.Genre>
 
 @{
-    ViewData["Title"] = "AI Movie Recommender";
+    ViewData["Title"] = "Asistent Cinematografic";
 }
 
-<div class="container text-center mt-5">
-    <h1 class="display-4 text-primary">✨ Recomandare prin Inteligență Artificială</h1>
-    <p class="lead">Alege genul preferat, iar AI-ul nostru va analiza baza de date pentru a găsi filmul perfect!</p>
-
-    @if (ViewBag.Message != null)
-    {
-        <div class="alert alert-warning">
-            @ViewBag.Message
-        </div>
+<style>
+   
+    :root {
+        --color-primary: #146c86; 
+        --color-dark: #2b4955; 
+        --color-accent: #ecac98;
     }
 
-    <div class="card shadow mx-auto p-4 mt-4" style="max-width: 500px; border-radius: 15px;">
-        <form asp-action="Recommend" method="post">
-            <div class="form-group mb-4 text-start">
-                <label class="form-label fw-bold">Ce gen de film cauți astăzi?</label>
-                <select name="genre" class="form-select form-select-lg">
-                    @if (Model != null)
+    body {
+        background-color: #fdfdfd;
+    }
+
+ 
+    .page-title {
+        color: var(--color-dark);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .divider-custom {
+        height: 4px;
+        width: 80px;
+        background-color: var(--color-accent);
+        border-radius: 10px;
+        margin: 0 auto;
+    }
+
+    
+    .custom-ai-card {
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border: none;
+    }
+
+   
+    .bot-avatar-circle {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--color-primary), var(--color-dark));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        box-shadow: 0 5px 15px rgba(20, 108, 134, 0.3);
+    }
+
+   
+    .custom-select {
+        border-radius: 15px !important;
+        font-size: 1.1rem;
+        cursor: pointer;
+        border: 2px solid #f0f0f0 !important;
+        background-color: #f8f9fa;
+        color: var(--color-dark);
+        font-weight: 600;
+        text-align: center;
+        padding: 15px;
+    }
+
+        .custom-select:focus {
+            border-color: var(--color-primary) !important;
+            box-shadow: 0 0 0 4px rgba(20, 108, 134, 0.1);
+            background-color: #fff;
+        }
+
+    
+    .btn-ai-action {
+        background-color: var(--color-primary);
+        color: white;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(20, 108, 134, 0.3);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-ai-action:hover {
+            background-color: var(--color-dark);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(20, 108, 134, 0.4);
+        }
+
+    .label-custom {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #adb5bd;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+    }
+</style>
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center mb-5">
+            <h1 class="page-title display-5">Asistentul tău Cinematografic</h1>
+            <p class="lead text-muted mb-4">
+                Alege genul preferat, iar robotul va analiza baza de date pentru a găsi filmul perfect pentru tine!
+            </p>
+            <div class="divider-custom"></div>
+        </div>
+
+        <div class="col-md-6 col-lg-5">
+            <div class="card custom-ai-card p-4">
+                <div class="card-body">
+
+                    <div class="text-center mb-4">
+                        <div class="bot-avatar-circle mx-auto mb-4">
+                            <i class="bi bi-cpu-fill"></i>
+                        </div>
+                        <h4 class="fw-bold" style="color: var(--color-dark);">Ce gen de film cauți astăzi?</h4>
+                    </div>
+
+                    @if (ViewBag.Message != null)
                     {
-                        @foreach (var genre in Model)
-                        {
-                            <option value="@genre.Name">@genre.Name</option>
-                        }
+                        <div class="alert alert-info border-0 rounded-pill small text-center mb-4" style="background-color: #e0f7fa; color: var(--color-dark);">
+                            @ViewBag.Message
+                        </div>
                     }
-                    else
-                    {
-                        <option value="">Nu s-au găsit genuri în DB</option>
-                    }
-                </select>
+
+                    <form asp-controller="MovieAI" asp-action="Recommend" method="post">
+                        <div class="mb-4 text-center">
+                            <label class="label-custom">GENURI DISPONIBILE</label>
+
+                            <select name="genre" class="form-select custom-select shadow-none">
+                                @foreach (var g in Model)
+                                {
+                                    <option value="@g.Name">@g.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn-ai-action">
+                                <i class="bi bi-robot me-2"></i> Cere recomandarea robotului
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
-                <i class="bi bi-cpu"></i> Cere Recomandarea AI
-            </button>
-        </form>
-    </div>
-
-    <div class="mt-5 text-muted">
-        <small>Modelul AI folosește date despre regizori, durată și anul lansării pentru a prezice succesul unui film.</small>
+            <p class="text-center mt-4 text-muted small px-4 fst-italic">
+                Robotul analizează nota de pe IMDb pentru a-ți oferi cea mai bună opțiune.
+            </p>
+        </div>
     </div>
 </div>

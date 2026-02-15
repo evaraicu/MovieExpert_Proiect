@@ -19,17 +19,34 @@ namespace MovieExpert_Proiect.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        // GET: Actors
+       
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Actors.ToListAsync());
+            
+            ViewData["CurrentFilter"] = searchString;
+
+           
+            var actors = _context.Actors.AsQueryable();
+
+            
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                actors = actors.Where(s => s.Name.Contains(searchString));
+            }
+
+           
+            return View(await actors.ToListAsync());
         }
 
+        // GET: Actors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
             var actor = await _context.Actors
-                .Include(a => a.Movies) 
+                .Include(a => a.Movies)
+                .ThenInclude(m => m.Genre)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (actor == null) return NotFound();
@@ -37,15 +54,20 @@ namespace MovieExpert_Proiect.Controllers
             return View(actor);
         }
 
+        // GET: Actors/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: Actors/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Actor actor)
         {
+           
+            ModelState.Remove("Movies");
+
             if (ModelState.IsValid)
             {
                 _context.Add(actor);
@@ -55,6 +77,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(actor);
         }
 
+        // GET: Actors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -64,11 +87,15 @@ namespace MovieExpert_Proiect.Controllers
             return View(actor);
         }
 
+        // POST: Actors/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Actor actor)
         {
             if (id != actor.Id) return NotFound();
+
+            
+            ModelState.Remove("Movies");
 
             if (ModelState.IsValid)
             {
@@ -87,6 +114,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(actor);
         }
 
+        // GET: Actors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -98,6 +126,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(actor);
         }
 
+        // POST: Actors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

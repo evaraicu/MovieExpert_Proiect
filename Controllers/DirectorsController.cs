@@ -19,11 +19,27 @@ namespace MovieExpert_Proiect.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        // GET: Directors
+        
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Directors.ToListAsync());
+           
+            ViewData["CurrentFilter"] = searchString;
+
+          
+            var directors = _context.Directors.AsQueryable();
+
+         
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                directors = directors.Where(s => s.Name.Contains(searchString));
+            }
+
+          
+            return View(await directors.ToListAsync());
         }
 
+        // GET: Directors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -35,15 +51,20 @@ namespace MovieExpert_Proiect.Controllers
             return View(director);
         }
 
+        // GET: Directors/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: Directors/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Director director)
         {
+         
+            ModelState.Remove("Movies");
+
             if (ModelState.IsValid)
             {
                 _context.Add(director);
@@ -53,6 +74,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(director);
         }
 
+        // GET: Directors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -62,11 +84,15 @@ namespace MovieExpert_Proiect.Controllers
             return View(director);
         }
 
+        // POST: Directors/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Director director)
         {
             if (id != director.Id) return NotFound();
+
+       
+            ModelState.Remove("Movies");
 
             if (ModelState.IsValid)
             {
@@ -85,6 +111,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(director);
         }
 
+        // GET: Directors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -96,6 +123,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(director);
         }
 
+        // POST: Directors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

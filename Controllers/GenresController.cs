@@ -19,11 +19,13 @@ namespace MovieExpert_Proiect.Controllers
             _context = context;
         }
 
+        // GET: Genres
         public async Task<IActionResult> Index()
         {
             return View(await _context.Genres.ToListAsync());
         }
 
+        // GET: Genres/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -35,15 +37,21 @@ namespace MovieExpert_Proiect.Controllers
             return View(genre);
         }
 
+        // GET: Genres/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: Genres/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Genre genre)
         {
+           
+            ModelState.Remove("Movies");
+            
+
             if (ModelState.IsValid)
             {
                 _context.Add(genre);
@@ -53,6 +61,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(genre);
         }
 
+        // GET: Genres/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -62,11 +71,16 @@ namespace MovieExpert_Proiect.Controllers
             return View(genre);
         }
 
+        // POST: Genres/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Genre genre)
         {
             if (id != genre.Id) return NotFound();
+
+           
+            ModelState.Remove("Movies");
+           
 
             if (ModelState.IsValid)
             {
@@ -85,6 +99,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(genre);
         }
 
+        // GET: Genres/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -96,6 +111,7 @@ namespace MovieExpert_Proiect.Controllers
             return View(genre);
         }
 
+        // POST: Genres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

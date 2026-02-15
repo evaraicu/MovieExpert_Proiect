@@ -6,13 +6,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Google.Protobuf" Version="3.33.4" />
+		<PackageReference Include="Google.Protobuf" Version="3.25.1" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.60.0" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.60.0" />
 		<PackageReference Include="Grpc.Tools" Version="2.60.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -24,7 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\MovieRecommender_WebApi1\MovieRecommender_WebApi1.csproj" />
+		<ProjectReference Include="..\MovieRecommender_WebApi1\MovieRecommender_WebApi1.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -32,13 +33,14 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="MovieRecommender.mlnet">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\MovieRecommender_GrpcService\Protos\movie.proto" GrpcServices="Client">
-			<Link>Protos\movie.proto</Link>
+		<Protobuf Include="..\MovieTrivia_GrpcService\Protos\trivia.proto" GrpcServices="Client">
+			<Link>Protos\trivia.proto</Link>
 		</Protobuf>
 	</ItemGroup>
+
 </Project>

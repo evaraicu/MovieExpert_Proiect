@@ -26,26 +26,21 @@ namespace MovieExpert_Proiect.Models
         [Display(Name = "Descriere")]
         public string Overview { get; set; }
 
-        // 1. Legătura cu Genul
         public int GenreId { get; set; }
 
         [Display(Name = "Gen")]
         public Genre Genre { get; set; }
 
-        // 2. Legătura cu Regizorul
         public int DirectorId { get; set; }
 
         [Display(Name = "Regizor")]
         public Director Director { get; set; }
 
-        // 3. Legătura cu Actorul Principal
         public int ActorId { get; set; }
 
-        // Aici am facut modificarea ceruta:
         [Display(Name = "Actor Principal")]
         public Actor Actor { get; set; }
 
-        // 4. Legătura cu Recenziile
         public ICollection<Review> Reviews { get; set; }
     }
 }

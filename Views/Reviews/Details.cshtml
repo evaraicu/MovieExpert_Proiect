@@ -1,48 +1,185 @@
 ﻿@model MovieExpert_Proiect.Models.Review
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalii Recenzie";
 }
 
-<h1>Details</h1>
+<style>
+    
+    :root {
+        --color-primary: #146c86; 
+        --color-dark: #2b4955; 
+        --color-accent: #ecac98; 
+    }
 
-<div>
-    <h4>Review</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rating)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rating)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sentiment)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Sentiment)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+ 
+    .details-card {
+        background: #fff;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        overflow: hidden;
+        max-width: 600px;
+        margin: 3rem auto; 
+    }
+
+    
+    .card-header-custom {
+        background-color: var(--color-dark);
+        color: white;
+        text-align: center;
+        padding: 25px;
+        border-bottom: 4px solid var(--color-accent);
+    }
+
+    .card-body-custom {
+        padding: 40px;
+    }
+
+    
+    .label-custom {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #adb5bd; 
+        letter-spacing: 1px;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .value-custom {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--color-dark);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    
+    .movie-highlight {
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        font-weight: 800;
+        margin-bottom: 30px;
+        text-align: center;
+        border-bottom: 1px solid #f0f0f0;
+        padding-bottom: 20px;
+    }
+
+    
+    .comment-box {
+        background-color: #f9f9f9;
+        border-left: 4px solid var(--color-accent);
+        padding: 20px;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+        color: #555;
+        line-height: 1.6;
+    }
+
+   
+    .btn-turcoaz {
+        background-color: var(--color-primary) !important;
+        color: white !important;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-block;
+        box-shadow: 0 4px 10px rgba(20, 108, 134, 0.2);
+    }
+
+        .btn-turcoaz:hover {
+            background-color: var(--color-dark) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(20, 108, 134, 0.3);
+        }
+
+    .btn-cancel {
+        color: #6c757d;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 10px 20px;
+        transition: color 0.2s;
+        display: inline-block;
+        margin-left: 10px;
+    }
+
+        .btn-cancel:hover {
+            color: var(--color-dark);
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container">
+
+    <div class="details-card">
+
+        <div class="card-header-custom">
+            <h3 class="m-0 fw-bold"><i class="bi bi-file-text me-2"></i>Detalii Recenzie</h3>
+        </div>
+
+        <div class="card-body-custom">
+
+            <div class="movie-highlight">
+                <i class="bi bi-film"></i> @Html.DisplayFor(model => model.Movie.Title)
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="label-custom">Utilizator</span>
+                    <div class="value-custom">
+                        <i class="bi bi-person-circle text-muted"></i>
+                        @Html.DisplayFor(model => model.UserName)
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <span class="label-custom">Data Recenziei</span>
+                    <div class="value-custom">
+                        <i class="bi bi-calendar3 text-muted"></i>
+                        @if (Model.ReviewDate != DateTime.MinValue)
+                        {
+                            @Model.ReviewDate.ToString("dd MMMM yyyy")
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <span class="label-custom">Nota Acordată</span>
+                <div class="value-custom">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <span class="fs-4">@Html.DisplayFor(model => model.Rating)</span>
+                    <span class="text-muted small align-self-end mb-1 ms-1"> / 10</span>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <span class="label-custom mb-2">Comentariu</span>
+                <div class="comment-box">
+                    <i class="bi bi-quote fs-4 opacity-50"></i>
+                    @Html.DisplayFor(model => model.Content)
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-turcoaz">
+                    <i class="bi bi-pencil-square me-2"></i> Editează
+                </a>
+                <a asp-action="Index" class="btn-cancel">
+                    Înapoi la Listă
+                </a>
+            </div>
+
+        </div>
+    </div>
 </div>

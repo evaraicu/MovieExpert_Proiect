@@ -1,53 +1,188 @@
 ﻿@model MovieExpert_Proiect.Models.Review
 
 @{
-    ViewData["Title"] = "Create Review";
+    ViewData["Title"] = "Adaugă Recenzie";
 }
 
-<h1>Adaugă Recenzie Nouă</h1>
+<style>
+   
+    :root {
+        --color-primary: #146c86; 
+        --color-dark: #2b4955; 
+        --color-accent: #ecac98; 
+    }
 
-<h4>Review</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+ 
+    .create-card {
+        background: #fff;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        overflow: hidden;
+        max-width: 700px;
+        margin: 3rem auto; 
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="MovieId" class="control-label">Alege Filmul</label>
-                <select asp-for="MovieId" class="form-control" asp-items="ViewBag.MovieId"></select>
-            </div>
+  
+    .card-header-custom {
+        background-color: var(--color-dark);
+        color: white;
+        text-align: center;
+        padding: 25px;
+        border-bottom: 4px solid var(--color-accent);
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
+    .card-body-custom {
+        padding: 40px;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Content" class="control-label"></label>
-                <textarea asp-for="Content" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
+    
+    .form-label {
+        font-weight: 700;
+        color: var(--color-dark);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" type="number" min="1" max="10" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
-            </div>
+    .input-group-text {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-right: none;
+        color: var(--color-primary);
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="ReviewDate" class="control-label"></label>
-                <input asp-for="ReviewDate" class="form-control" type="date" />
-                <span asp-validation-for="ReviewDate" class="text-danger"></span>
-            </div>
+    .form-control, .form-select {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-left: none;
+        padding: 12px;
+        transition: all 0.2s;
+    }
 
-            <div class="form-group mt-3">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            </div>
-        </form>
+        .form-control:focus, .form-select:focus {
+            background-color: #fff;
+            border-color: var(--color-primary);
+            box-shadow: none;
+            outline: 2px solid rgba(20, 108, 134, 0.1);
+        }
+
+           
+            .form-control:focus + .input-group-text,
+            .input-group:focus-within .input-group-text {
+                background-color: #fff;
+                border-color: var(--color-primary);
+            }
+
+   
+    .btn-turcoaz {
+        background-color: var(--color-primary) !important;
+        color: white !important;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(20, 108, 134, 0.2);
+    }
+
+        .btn-turcoaz:hover {
+            background-color: var(--color-dark) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(20, 108, 134, 0.3);
+        }
+
+    .btn-cancel {
+        color: #6c757d;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 10px 20px;
+        transition: color 0.2s;
+        display: inline-block;
+        margin-top: 15px;
+    }
+
+        .btn-cancel:hover {
+            color: var(--color-dark);
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container">
+
+    <div class="create-card">
+
+        <div class="card-header-custom">
+            <h3 class="m-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Adaugă Recenzie</h3>
+            <p class="m-0 opacity-75 small">Împărtășește-ți opinia despre un film</p>
+        </div>
+
+        <div class="card-body-custom">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-4">
+                    <label asp-for="MovieId" class="form-label">Alege Filmul</label>
+                    <div class="input-group">
+                        <span class="input-group-text rounded-start"><i class="bi bi-film"></i></span>
+                        <select asp-for="MovieId" class="form-select rounded-end" asp-items="ViewBag.MovieId"></select>
+                    </div>
+                    <span asp-validation-for="MovieId" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="UserName" class="form-label">Nume Utilizator</label>
+                    <div class="input-group">
+                        <span class="input-group-text rounded-start"><i class="bi bi-person"></i></span>
+                        <input asp-for="UserName" class="form-control rounded-end" placeholder="Ex: Cinefilul2024" />
+                    </div>
+                    <span asp-validation-for="UserName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Content" class="form-label">Comentariu</label>
+                    <div class="input-group">
+                        <span class="input-group-text rounded-start"><i class="bi bi-chat-quote"></i></span>
+                        <textarea asp-for="Content" class="form-control rounded-end" rows="3" placeholder="Scrie aici părerea ta..."></textarea>
+                    </div>
+                    <span asp-validation-for="Content" class="text-danger small"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Rating" class="form-label">Notă (1-10)</label>
+                        <div class="input-group">
+                            <span class="input-group-text rounded-start"><i class="bi bi-star-fill text-warning"></i></span>
+                            <input asp-for="Rating" class="form-control rounded-end" type="number" min="1" max="10" />
+                        </div>
+                        <span asp-validation-for="Rating" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="ReviewDate" class="form-label">Data Recenziei</label>
+                        <div class="input-group">
+                            <span class="input-group-text rounded-start"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="ReviewDate" class="form-control rounded-end" type="datetime-local" />
+                        </div>
+                        <span asp-validation-for="ReviewDate" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4 text-center">
+                    <button type="submit" class="btn btn-turcoaz w-100">
+                        SALVEAZĂ RECENZIA
+                    </button>
+
+                    <a asp-action="Index" class="btn-cancel">
+                        Renunță și Înapoi
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
+
 </div>
 
 @section Scripts {
